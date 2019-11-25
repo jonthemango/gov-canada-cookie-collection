@@ -23,8 +23,8 @@ const getCookies = async (url, browser) => {
     await page.goto("https://www.canada.ca/en/government/dept.html") // visit the government of Canada website for departments
     links = await page.$$('td > a') // get all links in the page
     let cookies = {} // cookie object
-    sum = 0 
-    for (let i=0; i<links.length; i++){ // for each link tag, get its href property, go to the site, and get its cookies, compute the average cookies
+    let sum = 0 
+    for (let i=0; i<links.length; i++){ // for each link tag, get its href property, go to the site, and get its cookies
         link = links[i];
         link = await link.getProperty("href")
         cookies[link] = {}
@@ -32,11 +32,7 @@ const getCookies = async (url, browser) => {
         cookies[link]["numberOfCookies"] = {} 
         cookies[link]["numberOfCookies"] = cookies[link]["cookies"].length;
         sum += cookies[link]["numberOfCookies"]
-        cookies["SUMMARY"] = {
-            "totalCookies": sum,
-            "averageCookies": sum / (i+1) 
-        }
-        fs.writeFile('./myfile', JSON.stringify(cookies), (er)=> { // write to a file 
+        fs.writeFile('./output.json', JSON.stringify(cookies), (er)=> { // write to a file 
             console.log("error",er);
         })
     }
